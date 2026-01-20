@@ -13,6 +13,16 @@ All sensor data is displayed in real-time on a web page hosted directly by the E
 
 ---
 
+## 📷 Setup Photos
+
+### 🔌 Hardware Circuit
+![IMG_2788](https://github.com/user-attachments/assets/b28aeb2f-7776-4dff-8f65-a9c2688a2203)
+
+### 🌐 Web Dashboard (Live Output)
+![ccaed038-a20e-4a51-9039-de2e0f3a6784](https://github.com/user-attachments/assets/5d8d59fa-6d59-4bbc-a82c-7b15fdf75734)
+
+---
+
 ## 🧰 Hardware Used
 
 | Component | Description |
@@ -22,7 +32,7 @@ All sensor data is displayed in real-time on a web page hosted directly by the E
 | PMS5003 | PM1.0 / PM2.5 / PM10 Air Quality Sensor |
 | MH-Z19 | CO₂ (Carbon Dioxide) Sensor |
 | Breadboard | For solderless connections |
-| Jumper Wires | Male-Female connections |
+| Jumper Wires | Male-Female & Male-Male connections |
 | 5V Power Supply | For PMS5003 & MH-Z19 |
 
 ---
