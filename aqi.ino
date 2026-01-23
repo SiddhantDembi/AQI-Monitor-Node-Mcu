@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266HTTPClient.h>
 #include <SoftwareSerial.h>
 #include <DHT.h>
 #include "PMS.h"
@@ -9,7 +10,11 @@
 #define DHTTYPE DHT11
 
 const char* ssid = "<SSID>";
-const char* password = "<PASS";
+const char* password = "<PASSWORD>";
+
+// InfluxDB Server
+const char* influxUrl = "http://<IP_ADRESS_INFLUXDB>:<PORT>/api/v2/write?org=homelab&bucket=aqi&precision=s";
+const char* influxToken = "<API_KEY>";
 
 ESP8266WebServer server(80);
 DHT dht(DHTPIN, DHTTYPE);
@@ -28,6 +33,9 @@ float humidity = 0;
 int pm1 = 0, pm25 = 0, pm10 = 0;
 int co2ppm = 0;
 
+unsigned long lastSend = 0;
+
+// ---------- Web Page ----------
 void handleRoot() {
   String html = R"rawliteral(
 <!DOCTYPE html>
@@ -79,6 +87,30 @@ void handleData() {
   server.send(200, "application/json", json);
 }
 
+// ---------- Send Data to InfluxDB ----------
+void sendToInflux() {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    WiFiClient client;
+
+    http.begin(client, influxUrl);
+    http.addHeader("Authorization", String("Token ") + influxToken);
+    http.addHeader("Content-Type", "text/plain");
+
+    String line = "air ";
+    line += "temperature=" + String(temperature);
+    line += ",humidity=" + String(humidity);
+    line += ",pm1=" + String(pm1);
+    line += ",pm25=" + String(pm25);
+    line += ",pm10=" + String(pm10);
+    line += ",co2=" + String(co2ppm);
+
+    int code = http.POST(line);
+    Serial.println("InfluxDB write status: " + String(code));
+    http.end();
+  }
+}
+
 void setup() {
   Serial.begin(9600);
   pmsSerial.begin(9600);
@@ -100,13 +132,11 @@ void setup() {
   server.begin();
 }
 
-unsigned long lastRead = 0;
-
 void loop() {
   server.handleClient();
 
-  if (millis() - lastRead > 2000) {
-    lastRead = millis();
+  if (millis() - lastSend > 10000) {   // every 10 seconds
+    lastSend = millis();
 
     humidity = dht.readHumidity();
     temperature = dht.readTemperature();
@@ -117,6 +147,11 @@ void loop() {
       pm10 = data.PM_AE_UG_10_0;
     }
 
-    co2ppm = mhz19.getCO2();
+    int newCO2 = mhz19.getCO2();   // read sensor
+    if (newCO2 != 0) {            // ignore invalid 0 readings
+      co2ppm = newCO2;
+    }
+
+    sendToInflux();   // stored in InfluxDB
   }
 }
