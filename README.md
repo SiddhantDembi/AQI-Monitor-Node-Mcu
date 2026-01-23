@@ -8,6 +8,7 @@ It measures:
 - 🌫 PM1.0, PM2.5, PM10 (PMS5003 Laser Dust Sensor)
 - 🫁 CO₂ Concentration (MH-Z19 Sensor)
 - 🌐 Live Web Dashboard (ESP8266 Web Server)
+- 📊 Historical Data & Graphs using InfluxDB + Grafana
 
 All sensor data is displayed in real-time on a web page hosted directly by the ESP8266.
 
@@ -20,6 +21,9 @@ All sensor data is displayed in real-time on a web page hosted directly by the E
 
 ### 🌐 Web Dashboard (Live Output)
 ![ccaed038-a20e-4a51-9039-de2e0f3a6784](https://github.com/user-attachments/assets/5d8d59fa-6d59-4bbc-a82c-7b15fdf75734)
+
+### 📊 Grafana Dashboard (Readings from InfluxDB)
+<img width="1913" height="831" alt="image" src="https://github.com/user-attachments/assets/6ef738c2-0d1e-4f38-af72-9e4dfcb082f5" />
 
 ---
 
@@ -70,6 +74,7 @@ Install these from Arduino Library Manager:
 
 - ESP8266WiFi
 - ESP8266WebServer
+- ESP8266HTTPClient
 - DHT sensor library
 - PMS (by Mariusz Wojcieszek or equivalent)
 - MHZ19
@@ -85,23 +90,39 @@ Once connected to WiFi, open the browser and visit:
 http://<ESP8266_IP_ADDRESS>/
 ```
 
-The page auto-refreshes every 2 seconds and shows:
+Live display:
+- Temperature (°C)
+- Humidity (%)
+- PM1.0 / PM2.5 / PM10 (µg/m³)
+- CO₂ (ppm)
 
-- Temperature
-- Humidity
-- PM1.0
-- PM2.5
-- PM10
-- CO₂ in ppm
+The page updates automatically using AJAX (no memory leaks, no full refresh).
+
+---
+
+## 📊 Data Logging & Visualization
+
+Sensor data is pushed to:
+- InfluxDB 2.x → Time-series storage
+- Grafana → Professional dashboards, history, trends, alerts
+
+Features:
+- Real-time graphs
+- Daily / weekly history
+- Live value tiles
+- Threshold coloring
+- Expandable to multiple rooms
 
 ---
 
 ## ⚙️ Features
 
-- Real-time air quality monitoring
-- Wireless access via phone or laptop
-- No external cloud required
-- Fully local network operation
+- Local web interface (no cloud dependency)
+- Time-series storage with InfluxDB
+- Professional Grafana dashboard
+- Zero-value filtering for CO₂ sensor
+- No soldering required
+- Modular & scalable (add more rooms/sensors)
 
 ---
 
