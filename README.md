@@ -8,13 +8,16 @@ It measures:
 - 🌫 PM1.0, PM2.5, PM10 (PMS5003 Laser Dust Sensor)
 - 🫁 CO₂ Concentration (MH-Z19 Sensor)
 - 🌐 Live Web Dashboard (ESP8266 Web Server)
-- 📊 Historical Data & Graphs using InfluxDB + Grafana
+- 📊 Historical Data & Graphs using InfluxDB + Grafana (Docker)
 
 All sensor data is displayed in real-time on a web page hosted directly by the ESP8266.
 
 ---
 
 ## 📷 Setup Photos
+
+### 🏁 Final Product
+![IMG_2810](https://github.com/user-attachments/assets/d05e4de3-788a-4f11-ae3f-a0ab4e72e8dc)
 
 ### 🔌 Hardware Circuit
 ![IMG_2788](https://github.com/user-attachments/assets/b28aeb2f-7776-4dff-8f65-a9c2688a2203)
@@ -38,6 +41,7 @@ All sensor data is displayed in real-time on a web page hosted directly by the E
 | Breadboard | For solderless connections |
 | Jumper Wires | Male-Female & Male-Male connections |
 | 5V Power Supply | For PMS5003 & MH-Z19 |
+| 3D Printed Case | Custom enclosure (STL & 3MF in `3D Models` folder) |
 
 ---
 
@@ -103,8 +107,19 @@ The page updates automatically using AJAX (no memory leaks, no full refresh).
 ## 📊 Data Logging & Visualization
 
 Sensor data is pushed to:
-- InfluxDB 2.x → Time-series storage
+- InfluxDB → Time-series storage
 - Grafana → Professional dashboards, history, trends, alerts
+
+A `docker-compose.yml` is included to run:
+- InfluxDB
+- Grafana
+Start the stack:
+```
+docker compose up -d
+```
+Then access:
+- InfluxDB → http://SERVER_IP:8086  
+- Grafana → http://SERVER_IP:3000  
 
 Features:
 - Real-time graphs
